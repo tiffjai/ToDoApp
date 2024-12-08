@@ -1,125 +1,73 @@
-// pages/index.tsx
 import type { NextPage } from 'next';
 import { useState, useEffect } from 'react';
 import { Todo } from '../types/todo';
 import TodoList from '../components/TodoList';
-
+import '../styles/globals.css';
 const Home: NextPage = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [newTodoText, setNewTodoText] = useState('');
 
-  // useEffect to fetch the initial list of todos when the component loads
+  // Your full-stack schedule as 30 pre-defined todos
+  const fullStackSchedule: Todo[] = [
+    { id: '1', text: 'Day 1: Set up Next.js project', completed: false },
+    { id: '2', text: 'Day 2: Learn React basics', completed: false },
+    { id: '3', text: 'Day 3: Understand React state and props', completed: false },
+    { id: '4', text: 'Day 4: Learn about hooks (useState, useEffect)', completed: false },
+    { id: '5', text: 'Day 5: Build a simple Todo app', completed: false },
+    { id: '6', text: 'Day 6: Integrate CSS into the project', completed: false },
+    { id: '7', text: 'Day 7: Explore Next.js API routes', completed: false },
+    { id: '8', text: 'Day 8: Connect frontend with API endpoints', completed: false },
+    { id: '9', text: 'Day 9: Learn about database integration (e.g., MongoDB)', completed: false },
+    { id: '10', text: 'Day 10: Create CRUD operations', completed: false },
+    { id: '11', text: 'Day 11: Understand server-side rendering (SSR)', completed: false },
+    { id: '12', text: 'Day 12: Dive into static site generation (SSG)', completed: false },
+    { id: '13', text: 'Day 13: Learn about authentication (e.g., JWT)', completed: false },
+    { id: '14', text: 'Day 14: Implement user authentication', completed: false },
+    { id: '15', text: 'Day 15: Explore state management (e.g., Redux)', completed: false },
+    { id: '16', text: 'Day 16: Apply state management to the app', completed: false },
+    { id: '17', text: 'Day 17: Study deployment basics', completed: false },
+    { id: '18', text: 'Day 18: Deploy app to Vercel', completed: false },
+    { id: '19', text: 'Day 19: Optimize app performance', completed: false },
+    { id: '20', text: 'Day 20: Add testing (e.g., Jest)', completed: false },
+    { id: '21', text: 'Day 21: Write unit tests for components', completed: false },
+    { id: '22', text: 'Day 22: Learn about TypeScript in React', completed: false },
+    { id: '23', text: 'Day 23: Refactor app with TypeScript', completed: false },
+    { id: '24', text: 'Day 24: Explore GraphQL basics', completed: false },
+    { id: '25', text: 'Day 25: Integrate GraphQL with the app', completed: false },
+    { id: '26', text: 'Day 26: Add advanced features (e.g., real-time updates)', completed: false },
+    { id: '27', text: 'Day 27: Improve app UI and UX', completed: false },
+    { id: '28', text: 'Day 28: Study CI/CD pipelines', completed: false },
+    { id: '29', text: 'Day 29: Implement CI/CD for the app', completed: false },
+    { id: '30', text: 'Day 30: Final review and polish', completed: false },
+  ];
+
+  // Initialize the schedule into the todos state
   useEffect(() => {
-    const fetchTodos = async () => {
-      const res = await fetch('/api/todos');
-      if (res.ok) {
-        const initialTodos = await res.json();
-        setTodos(initialTodos);
-      } else {
-        console.error("Failed to fetch todos:", res.status);
-      }
-    };
+    setTodos(fullStackSchedule); // Set the schedule as the initial todos
+  }, []);
 
-    fetchTodos(); // Call the fetchTodos function within useEffect
-  }, []); // The empty dependency array ensures this effect runs only once after the initial render
-
-  const handleAddTodo = async () => {
-    if (newTodoText.trim() === "") return; // Prevent adding empty todos
-
-    const res = await fetch('/api/todos', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ text: newTodoText }),
-    });
-
-    if (res.ok) {
-      const newTodo = await res.json();
-      setTodos([...todos, newTodo]);
-      setNewTodoText('');
-    } else {
-      console.error("Failed to add todo:", res.status);
-    }
+  const handleToggleComplete = (id: string) => {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
   };
 
-  const handleToggleComplete = async (id: string) => {
-    const todoToUpdate = todos.find((todo) => todo.id === id);
-    if (!todoToUpdate) return;
-
-    const res = await fetch('/api/todos', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ...todoToUpdate,
-        completed: !todoToUpdate.completed,
-      }),
-    });
-
-    if (res.ok) {
-      setTodos(
-        todos.map((todo) =>
-          todo.id === id ? { ...todo, completed: !todo.completed } : todo
-        )
-      );
-    } else {
-      console.error("Failed to update todo:", res.status);
-    }
+  const handleDelete = (id: string) => {
+    setTodos(todos.filter((todo) => todo.id !== id)); // Remove the todo from the state
   };
 
-  const handleDelete = async (id: string) => {
-    const res = await fetch(`/api/todos?id=${id}`, {
-      method: 'DELETE',
-    });
-
-    if (res.ok) {
-      setTodos(todos.filter((todo) => todo.id !== id));
-    } else {
-      console.error("Failed to delete todo:", res.status);
-    }
-  };
-
-  const handleUpdate = async (id: string, newText: string) => {
-    const todoToUpdate = todos.find((todo) => todo.id === id);
-    if (!todoToUpdate) return;
-
-    const res = await fetch('/api/todos', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ...todoToUpdate,
-        text: newText,
-      }),
-    });
-
-    if (res.ok) {
-      setTodos(
-        todos.map((todo) =>
-          todo.id === id ? { ...todo, text: newText } : todo
-        )
-      );
-    } else {
-      console.error("Failed to update todo:", res.status);
-    }
+  const handleUpdate = (id: string, newText: string) => {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, text: newText } : todo
+      )
+    );
   };
 
   return (
     <div className="container">
-      <h1>My To-Do App</h1>
-
-      <div className="add-todo">
-        <input
-          type="text"
-          placeholder="Add a to-do"
-          value={newTodoText}
-          onChange={(e) => setNewTodoText(e.target.value)}
-        />
-        <button onClick={handleAddTodo}>Add</button>
-      </div>
+      <h1>Full-Stack Developer 30-Day Schedule</h1>
 
       <TodoList
         todos={todos}
@@ -128,37 +76,7 @@ const Home: NextPage = () => {
         onUpdate={handleUpdate}
       />
 
-      {/* Inline styles (unchanged) */}
-      <style jsx>{`
-        .container {
-          max-width: 600px;
-          margin: 0 auto;
-          padding: 2rem;
-          font-family: sans-serif;
-        }
-
-        .add-todo {
-          display: flex;
-          margin-bottom: 1rem;
-        }
-
-        .add-todo input {
-          flex-grow: 1;
-          margin-right: 0.5rem;
-          padding: 0.5rem;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-        }
-
-        .add-todo button {
-          background-color: #4caf50;
-          color: white;
-          border: none;
-          padding: 0.5rem 1rem;
-          border-radius: 4px;
-          cursor: pointer;
-        }
-      `}</style>
+   
     </div>
   );
 };

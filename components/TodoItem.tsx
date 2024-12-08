@@ -80,44 +80,7 @@ const TodoItem: React.FC<TodoItemProps> = ({
         )}
       </div>
 
-      {/* Inline CSS for styling the TodoItem */}
-      <style jsx>{`
-        .todo-item {
-          display: flex; // Makes items appear side by side
-          align-items: center; // Vertically centers items
-          margin-bottom: 0.5rem; // Adds space below each item
-          padding: 0.5rem; // Adds inner spacing
-          border: 1px solid #ccc; // Adds a light border
-          border-radius: 4px; // Rounds the corners
-        }
-
-        .todo-item input[type='checkbox'] {
-          margin-right: 0.5rem; // Space between checkbox and text
-        }
-
-        .todo-item .completed {
-          text-decoration: line-through; // Strikes through completed items
-          color: #999; // Faded color for completed tasks
-        }
-
-        .todo-item .buttons {
-          margin-left: auto; // Pushes buttons to the far right
-        }
-
-        .todo-item .buttons button {
-          margin-left: 0.5rem; // Adds space between buttons
-          background-color: #f44336; // Red background for buttons
-          color: white; // White text
-          border: none; // Removes border
-          padding: 0.25rem 0.5rem; // Adds inner spacing
-          border-radius: 4px; // Rounds the button corners
-          cursor: pointer; // Pointer cursor on hover
-        }
-
-        .todo-item .buttons button:first-child {
-          background-color: #008CBA; // Blue background for the first button (e.g., Edit/Save)
-        }
-      `}</style>
+   
     </li>
   );
 };
